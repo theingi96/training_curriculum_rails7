@@ -45,9 +45,5 @@ class CalendarsController < ApplicationController
     end
 
 #省略
-
-      @week_days.push(days)
-    end
-
   end
 end
