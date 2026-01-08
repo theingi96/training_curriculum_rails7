@@ -15,7 +15,7 @@ class CalendarsController < ApplicationController
   private
 
   def plan_params
-    params.require(:calendars).permit(:date, :plan)
+    params.require(:plan).permit(:date, :plan)
   end
 
   def get_week
@@ -34,9 +34,15 @@ class CalendarsController < ApplicationController
       plans.each do |plan|
         today_plans.push(plan.plan) if plan.date == @todays_date + x
       end
-      days = { month: (@todays_date + x).month, date: (@todays_date+x).day, plans: today_plans}
+      # --- ဤနေရာမှ စတင်၍ ဖြည့်စွက်ခဲ့သည် ---
+      wday_num = @todays_date.wday + x # ယနေ့၏ နေ့ရက်နံပါတ် (0-6) ကို အခြေခံ၍ ပေါင်းစပ်ခြင်း
+      if wday_num >= 7 # အကယ်၍ 7 ထက်ကျော်သွားပါက 0 ပြန်ဖြစ်အောင် 7 နှုတ်ပေးခြင်း
+        wday_num = wday_num - 7
+      end
+      # Hash ထဲမှာ :wday ဆိုတဲ့ key အသစ်ကို ထည့်သွင်းပါ
+      days = { month: (@todays_date + x).month, date: (@todays_date + x).day, plans: today_plans, wday: wdays[wday_num]}
       @week_days.push(days)
     end
-
+#省略
   end
 end
